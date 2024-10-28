@@ -1,0 +1,35 @@
+name: Terraform CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - feature/wtc-20241028
+
+jobs:
+  terraform_ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        run: terraform init -backend=false
+        working-directory: ./terraform
+
+      - name: Terraform Format Check
+        run: terraform fmt -check
+        working-directory: ./terraform
+
+      - name: Terraform Validate
+        run: terraform validate
+        working-directory: ./terraform
+
+      - name: Terraform Plan
+        run: terraform plan -no-color
+        working-directory: ./terraform
