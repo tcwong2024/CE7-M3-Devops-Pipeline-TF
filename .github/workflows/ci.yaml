@@ -1,4 +1,5 @@
 name: Terraform CI
+run-name: Running CI Pipeline by ${{ github.actor }}
 
 on:
   pull_request:
@@ -9,6 +10,9 @@ on:
 jobs:
   terraform_ci:
     runs-on: ubuntu-latest
+    outputs:
+      status: ${{ job.status }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -18,13 +22,13 @@ jobs:
         with:
           terraform_wrapper: false
 
-      # Configures AWS credentials 
+      # Configures AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-           aws-region: us-east-1          
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: var.region_name
 
       - name: Terraform Init
         run: terraform init -backend=true
@@ -41,3 +45,21 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -no-color
         working-directory: ./terraform
+
+  Summary:
+    needs: [terraform_ci]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Adding markdown
+        run: |
+          TF_STATUS=${{ needs.terraform_ci.outputs.status }}
+
+          echo '## 🚀 Preparing Build Summary 🚀' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+
+          echo "| Job Name        | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Terraform CI    | $TF_STATUS |" >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+
+          echo '## Job ran by: ${{ github.actor }}' >> $GITHUB_STEP_SUMMARY

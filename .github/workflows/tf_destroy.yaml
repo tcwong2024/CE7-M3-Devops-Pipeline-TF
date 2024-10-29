@@ -1,63 +1,55 @@
-name: Terraform CD
-run-name: Running Terraform CD by ${{ github.actor }}
+name: Terraform Destroy
+run-name: Running Terraform Destroy by ${{ github.actor }}
 
 on:
-  push:
-    branches:
-      - main
-      - feature/wtc-20241028
-    tags:
-        - "v1.0.1"
+  workflow_dispatch:
 
 jobs:
-  terraform_cd:
+  Terraform-Destroy:
     runs-on: ubuntu-latest
     outputs:
       status: ${{ job.status }}
+    defaults:
+      run:
+        working-directory: terraform
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_wrapper: false
-
-      # Configures AWS credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: var.region_name
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: Terraform Init
         run: terraform init
-        working-directory: ./terraform
 
-      - name: Terraform Plan
-        run: terraform plan -no-color
-        working-directory: ./terraform
+      - name: Wait for 10 Sec
+        run: sleep 10
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
-        working-directory: ./terraform
+      - name: Terraform Destroy
+        run: terraform destroy -no-color -auto-approve
 
   Summary:
-    needs: [terraform_cd]
+    needs: [Terraform-Destroy]
     runs-on: ubuntu-latest
     steps:
       - name: Adding markdown
         run: |
-          TF_STATUS=${{ needs.terraform_cd.outputs.status }}
+          TF_STATUS=${{ needs.Terraform-Destroy.outputs.status }}
 
           echo '## 🚀 Preparing Build Summary 🚀' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
 
           echo "| Job Name        | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|-----------------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Terraform CD    | $TF_STATUS |" >> $GITHUB_STEP_SUMMARY
+          echo "| Terraform Destroy      | $TF_STATUS |" >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
 
           echo '## Job ran by: ${{ github.actor }}' >> $GITHUB_STEP_SUMMARY
