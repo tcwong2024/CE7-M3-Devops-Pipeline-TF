@@ -4,6 +4,6 @@ resource "aws_s3_bucket" "simple_bucket" {
 
   tags = {
     Name        = var.bucket_name
-    Environment = "Development"
+    Environment = var.env_name
   }
 }
