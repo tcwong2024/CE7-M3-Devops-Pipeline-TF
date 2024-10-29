@@ -1,7 +1,8 @@
 # Assignment 3.9 Devops CICD Pipeline using Terraform to create S3 bucket
 
 1. Create a new Github repository called **"CE7-M3-Devops-Pipeline-TF"** and clone locally.
-    - Add **secret repository** for AWS credential in github setting.
+    - Add **repository secret** for AWS credential in github setting.
+    - Add **repository variable** for AWS region in github setting.
     - Set **protection** to main branch.
     - Create **new branch** for the development work (feature/wtc-20241028 branch).
 

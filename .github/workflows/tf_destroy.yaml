@@ -7,6 +7,10 @@ on:
 jobs:
   Terraform-Destroy:
     runs-on: ubuntu-latest
+
+    env:
+      TF_VAR_region_name: ${{ vars.REGION_NAME }}
+
     outputs:
       status: ${{ job.status }}
     defaults:
@@ -22,7 +26,6 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: var.region_name
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
