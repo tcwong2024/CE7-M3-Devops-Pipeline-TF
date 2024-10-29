@@ -1,5 +1,5 @@
-name: Terraform CI
-run-name: Running CI Pipeline by ${{ github.actor }}
+name: WF1 Terraform CI
+run-name: Running Terraform CI Pipeline by ${{ github.actor }}
 
 on:
   pull_request:

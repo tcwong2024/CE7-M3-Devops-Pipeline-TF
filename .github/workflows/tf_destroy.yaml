@@ -1,4 +1,4 @@
-name: Terraform Destroy
+name: WF3 Terraform Destroy
 run-name: Running Terraform Destroy by ${{ github.actor }}
 
 on:

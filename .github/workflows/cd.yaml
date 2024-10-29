@@ -1,11 +1,11 @@
-name: Terraform CD
-run-name: Running Terraform CD by ${{ github.actor }}
+name: WF2 Terraform CD
+run-name: Running Terraform CD Pipeline by ${{ github.actor }}
 
 on:
   push:
     branches:
       - main
-      # - feature/wtc-20241028
+
     tags:
         - "v1.0.1"
 
