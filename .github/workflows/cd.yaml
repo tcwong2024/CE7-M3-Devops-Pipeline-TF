@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - feature/wtc-20241028
+      # - feature/wtc-20241028
     tags:
         - "v1.0.1"
 

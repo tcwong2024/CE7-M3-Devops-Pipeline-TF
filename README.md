@@ -1,4 +1,4 @@
-# Assignment 3.9 Devops CICD Pipeline using Terraform to create S3 bucket
+# Assignment 3.9 : Devops CI/CD Pipeline using Terraform to create S3 bucket.
 
 1. Create a new Github repository called **"CE7-M3-Devops-Pipeline-TF"** and clone locally.
     - Add **repository secret** for AWS credential in github setting.
@@ -8,7 +8,7 @@
 
 2. Use terraform code to create a simple S3 bucket.
     - Create terraform code inside a directory called **terraform** folder that links to our backend s3 bucket for ce7 for storing tf state file 
-    - Create all the necessary code for creating the S3 bucket.
+    - Create all the necessary code (backend.tf, provider.tf, varaible.tf and main.tf) for creating the S3 bucket.
 
 3. Create a **.github/workflows** folder with 2 files - ci.yaml, cd.yaml and tf_destroy.yaml. 
     - **ci.yaml** should run on a pull request creation to main/feature branch and run simple checks like terraform plan, terraform validate, terraform fmt check and any other checks you think is needed.
